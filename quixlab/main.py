@@ -566,6 +566,7 @@ def ai_7(testrigdata):
 def ai_1():
     """First, show me what's actually in this lakehouse. List the tables, and for each one: how
     many rows, what columns (with types), and what time period it covers."""
+    # ql-ai-mode: agent
 
 
 @canvas.ai(position=(867, -6623), size=(560, 420), code_height=200)
