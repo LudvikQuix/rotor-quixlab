@@ -3,7 +3,7 @@ import quixlab as ql
 canvas = ql.Canvas(title="rotor_analasys")
 
 
-@canvas.ai(position=(-86, -5607), size=(1092, 837), code_height=465, viz={'aiMode': 'agent'})
+@canvas.ai(position=(-46, -5606), size=(1092, 837), code_height=465, viz={'aiMode': 'agent'})
 def ai_1():
     """can you show available tables in lakehouse
     """
@@ -69,7 +69,7 @@ def lake_inventory():
     return ql.sql("""SHOW TABLES""")
 
 
-@canvas.dataset(position=(-1390, -5516), size=(1028, 748), code_height=200)
+@canvas.dataset(position=(-1169, -5977), size=(1028, 748), code_height=200)
 def optimierung():
     return ql.sql("""SELECT *
     FROM rawdata
