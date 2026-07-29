@@ -3,7 +3,7 @@ import quixlab as ql
 canvas = ql.Canvas(title="rotor_analasys")
 
 
-@canvas.ai(position=(-46, -5606), size=(1092, 837), code_height=465, viz={'aiMode': 'agent'})
+@canvas.ai(position=(-46, -5606), size=(1092, 837), code_height=0, viz={'aiMode': 'agent'})
 def ai_1():
     """can you show available tables in lakehouse
     """
