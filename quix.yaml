@@ -1,0 +1,44 @@
+# Quix Project Descriptor
+# This file describes the data pipeline and configuration of resources of a Quix Project.
+
+metadata:
+  version: 2.0
+
+# This section describes the Deployments of the data pipeline
+deployments:
+  - name: QuixLab
+    application: quixlab
+    version: latest
+    deploymentType: Service
+    resources:
+      limits:
+        cpu: 1000
+        memory: 2000
+    publicAccess:
+      enabled: true
+      urlPrefix: quixlab-778d0df
+    state:
+      enabled: true
+      size: 2
+    network:
+      ports:
+        - port: 80
+          targetPort: 80
+    plugin:
+      embeddedView:
+        enabled: true
+        hideHeader: true
+        default: true
+      sidebarItem:
+        show: true
+        label: QuixLab
+        icon: grid_view
+        order: 1
+      globalItem:
+        show: true
+        label: QuixLab
+        icon: find_in_page
+        order: 1
+    blobStorage:
+      bind: true
+
