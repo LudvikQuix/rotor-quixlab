@@ -1,6 +1,6 @@
 import quixlab as ql
 
-canvas = ql.Canvas(title="rotor_analasys", markups=[{'id': 'ai_notes_ai_1', 'text': "- Discovery done via the platform's Lakehouse Query API (GET /tables catalog endpoint), read-only, no repo/canvas changes made.\n- `rawdata` row count was skipped because a full COUNT(*) timed out — it's a very large high-frequency table; use partition filters if you need to query it.\n- A `testrigdata` table referenced in this project's `quixlab/main.py` notebook does NOT exist in this workspace's catalog — that reference appears to point at a different environment/workspace's storage. Flagging this in case it indicates a stale or misconfigured reference.\n- Row counts for other tables are approximate (single COUNT(*) query each), not verified further.", 'x': -377, 'y': -5142, 'w': 300, 'h': 400, 'rendered': True, 'linkedTo': 'ai_1'}])
+canvas = ql.Canvas(title="rotor_analasys", markups=[{'id': 'ai_notes_ai_1', 'text': "- Discovery done via the platform's Lakehouse Query API (GET /tables catalog endpoint), read-only, no repo/canvas changes made.\n- `rawdata` row count was skipped because a full COUNT(*) timed out — it's a very large high-frequency table; use partition filters if you need to query it.\n- A `testrigdata` table referenced in this project's `quixlab/main.py` notebook does NOT exist in this workspace's catalog — that reference appears to point at a different environment/workspace's storage. Flagging this in case it indicates a stale or misconfigured reference.\n- Row counts for other tables are approximate (single COUNT(*) query each), not verified further.", 'x': -206, 'y': -5178, 'w': 300, 'h': 400, 'rendered': True, 'linkedTo': 'ai_1'}])
 
 
 @canvas.ai(position=(150, -5775), size=(1092, 837), code_height=465, viz={'aiMode': 'agent'})
@@ -64,7 +64,7 @@ def ai_1():
     summary
 
 
-@canvas.dataset(position=(1559, -5538), size=(730, 702), code_height=200)
+@canvas.dataset(position=(1282, -5775), size=(730, 702), code_height=200)
 def lake_inventory():
     return ql.sql("""SHOW TABLES""")
 
