@@ -3,7 +3,7 @@ import quixlab as ql
 canvas = ql.Canvas(title="rotor_analasys")
 
 
-@canvas.ai(position=(1214, -4992), size=(560, 420), code_height=200)
+@canvas.ai(position=(714, -5010), size=(1092, 837), code_height=200)
 def ai_1():
     """Describe what you want computed — plain English, not code.
 
