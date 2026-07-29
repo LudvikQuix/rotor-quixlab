@@ -69,5 +69,12 @@ def lake_inventory():
     return ql.sql("""SHOW TABLES""")
 
 
+@canvas.dataset(position=(-1390, -5516), size=(1028, 748), code_height=200)
+def optimierung():
+    return ql.sql("""SELECT *
+    FROM rawdata
+    LIMIT 100""")
+
+
 if __name__ == "__main__":
     canvas.serve()
