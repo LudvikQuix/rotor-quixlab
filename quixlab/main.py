@@ -568,52 +568,6 @@ def ai_1():
 
     ## Plot styles
     - Set plot height to 400px"""
-    # ql-ai: generated from prompt b13380bd2eba1ccf
-    import time
-    import numpy as np
-    import pandas as pd
-    import plotly.express as px
-
-    def _query_with_retry(sql, attempts=5, base_delay=2):
-        """lh-query is a per-workspace pod that can be cold-starting (scale-to-zero)
-        right after the notebook boots, producing a transient 'Connection refused'.
-        Retry with backoff instead of failing on the first attempt."""
-        last_err = None
-        for i in range(attempts):
-            try:
-                return ql.sql(sql)
-            except Exception as e:
-                last_err = e
-                time.sleep(base_delay * (i + 1))
-        raise RuntimeError(
-            f"QuixLake query service unavailable after {attempts} retries: {last_err}"
-        )
-
-    df = _query_with_retry("SELECT * FROM testrigdata LIMIT 200000")
-
-    # Locate the temperature column defensively - avoid hardcoding an unverified name
-    temp_col = next((c for c in df.columns if "temp" in c.lower()), None)
-    if temp_col is None:
-        raise ValueError(
-            f"No temperature-like column found in testrigdata. Available columns: {list(df.columns)}"
-        )
-
-    temps = pd.to_numeric(df[temp_col], errors="coerce").dropna()
-
-    percentiles = np.arange(1, 100)
-    values = np.percentile(temps, percentiles)
-
-    result = pd.DataFrame({"percentile": percentiles, "temperature": values})
-
-    fig = px.line(
-        result,
-        x="percentile",
-        y="temperature",
-        title=f"Percentile distribution of {temp_col}",
-        labels={"percentile": "Percentile", "temperature": temp_col},
-    )
-    fig.update_layout(height=400)
-    fig
 
 
 @canvas.ai(position=(867, -6623), size=(560, 420), code_height=200)
