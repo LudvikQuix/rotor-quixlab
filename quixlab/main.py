@@ -582,30 +582,22 @@ def ai_3():
     - Put MS and Hall to secondary right y axis
     - Set plot height to 400px"""
     # ql-ai: generated from prompt 769920c330f0bc2c
+    import pandas as pd
     import plotly.graph_objects as go
-    from plotly.subplots import make_subplots
 
-    df = rawdata.sort_values("time_ms")
+    df = rawdata.sort_values("ts_ms").copy()
+    df["timestamp"] = pd.to_datetime(df["ts_ms"], unit="ms")
 
-    fig = make_subplots(specs=[[{"secondary_y": True}]])
-    fig.add_trace(
-        go.Scattergl(x=df["time_ms"], y=df["GS"], name="GS", mode="lines"),
-        secondary_y=False,
-    )
-    fig.add_trace(
-        go.Scattergl(x=df["time_ms"], y=df["MS"], name="MS", mode="lines"),
-        secondary_y=True,
-    )
-    fig.add_trace(
-        go.Scattergl(x=df["time_ms"], y=df["Hall"], name="Hall", mode="lines"),
-        secondary_y=True,
-    )
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df["timestamp"], y=df["GS"], name="GS", yaxis="y1"))
+    fig.add_trace(go.Scatter(x=df["timestamp"], y=df["MS"], name="MS", yaxis="y2"))
+    fig.add_trace(go.Scatter(x=df["timestamp"], y=df["Hall"], name="Hall", yaxis="y2"))
 
     fig.update_layout(
         height=400,
-        xaxis_title="time (ms)",
-        yaxis_title="GS",
-        yaxis2_title="MS / Hall",
+        xaxis=dict(title="Time"),
+        yaxis=dict(title="GS"),
+        yaxis2=dict(title="MS / Hall", overlaying="y", side="right"),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(t=40, b=40),
     )
