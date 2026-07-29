@@ -564,10 +564,7 @@ def ai_7(testrigdata):
 
 @canvas.ai(position=(855, -6299), size=(560, 420), code_height=200)
 def ai_1():
-    """Calculate percentile distribution of temperature and plot it.
-
-    ## Plot styles
-    - Set plot height to 400px"""
+    """"""
 
 
 @canvas.ai(position=(867, -6623), size=(560, 420), code_height=200)
