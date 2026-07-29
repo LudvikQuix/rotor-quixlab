@@ -6,7 +6,7 @@ canvas = ql.Canvas(title="rotor_analasys")
 @canvas.ai(position=(379, -5576), size=(1092, 837), code_height=465, viz={'aiMode': 'agent'})
 def ai_1():
     """First, show me what's actually in this lakehouse. List the tables, and for each one: how
-    many rows, what columns (with types), and what time period it covers."""
+    many rows, what columns (with types), and what time period it """
     # ql-ai-mode: agent
     # ql-ai: generated from prompt 419773026e9272eb
     import pandas as pd
