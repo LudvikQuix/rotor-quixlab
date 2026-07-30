@@ -86,5 +86,26 @@ def kb_Pffeifer_KB_md():
     pass
 
 
+@canvas.dataset(position=(1091, -6220), size=(560, 420), code_height=200)
+def rawdata():
+    return ql.sql("""
+        SELECT
+            rotorID,
+            machineName,
+            fileName,
+            run_id,
+            time_ms,
+            GS, MS, Hall
+        FROM rawdata
+        WHERE machineName = 'DEAARDSK0175'
+          AND rotorID = 'DE20254901019'
+          AND year = 2026
+          AND month = '02'
+          AND day = 13
+        ORDER BY time_ms
+        LIMIT 5000
+    """)
+
+
 if __name__ == "__main__":
     canvas.serve()
