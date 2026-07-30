@@ -1,9 +1,9 @@
 import quixlab as ql
 
-canvas = ql.Canvas(title="rotor_analasys", markups=[{'id': 'ai_notes_ai_1', 'text': "- Discovery done via the platform's Lakehouse Query API (GET /tables catalog endpoint), read-only, no repo/canvas changes made.\n- `rawdata` row count was skipped because a full COUNT(*) timed out — it's a very large high-frequency table; use partition filters if you need to query it.\n- A `testrigdata` table referenced in this project's `quixlab/main.py` notebook does NOT exist in this workspace's catalog — that reference appears to point at a different environment/workspace's storage. Flagging this in case it indicates a stale or misconfigured reference.\n- Row counts for other tables are approximate (single COUNT(*) query each), not verified further.", 'x': -246, 'y': -5666, 'w': 300, 'h': 400, 'rendered': True, 'linkedTo': 'ai_1'}])
+canvas = ql.Canvas(title="rotor_analasys", markups=[{'id': 'ai_notes_ai_1', 'text': "- Discovery done via the platform's Lakehouse Query API (GET /tables catalog endpoint), read-only, no repo/canvas changes made.\n- `rawdata` row count was skipped because a full COUNT(*) timed out — it's a very large high-frequency table; use partition filters if you need to query it.\n- A `testrigdata` table referenced in this project's `quixlab/main.py` notebook does NOT exist in this workspace's catalog — that reference appears to point at a different environment/workspace's storage. Flagging this in case it indicates a stale or misconfigured reference.\n- Row counts for other tables are approximate (single COUNT(*) query each), not verified further.", 'x': 239, 'y': -6407, 'w': 300, 'h': 400, 'rendered': True, 'linkedTo': 'ai_1'}])
 
 
-@canvas.ai(position=(150, -5775), size=(1092, 837), code_height=465, viz={'aiMode': 'agent'})
+@canvas.ai(position=(645, -6420), size=(550, 425), code_height=465, viz={'aiMode': 'agent'})
 def ai_1():
     """can you show available tables in lakehouse
     """
@@ -64,29 +64,29 @@ def ai_1():
     summary
 
 
-@canvas.dataset(position=(2033, -6194), size=(816, 850), code_height=200)
+@canvas.dataset(position=(1089, -5928), size=(816, 850), code_height=200)
 def lake_inventory():
     return ql.sql("""SHOW TABLES""")
 
 
-@canvas.dataset(position=(-1267, -5809), size=(1028, 748), code_height=200)
+@canvas.dataset(position=(14, -5914), size=(1028, 748), code_height=200)
 def optimierung():
     return ql.sql("""SELECT *
     FROM rawdata
     LIMIT 100""")
 
 
-@canvas.file(position=(-63, -6512), size=(520, 460), code_height=0, path='kb/ballancing-machine.md')
+@canvas.file(position=(123, -6860), size=(499, 400), code_height=0, path='kb/ballancing-machine.md')
 def kb_ballancing_machine_md():
     pass
 
 
-@canvas.file(position=(650, -6863), size=(520, 460), code_height=0, path='kb/Pffeifer-KB.md')
+@canvas.file(position=(672, -6861), size=(525, 412), code_height=0, path='kb/Pffeifer-KB.md')
 def kb_Pffeifer_KB_md():
     pass
 
 
-@canvas.dataset(position=(1091, -6220), size=(560, 420), code_height=200)
+@canvas.dataset(position=(1220, -6413), size=(560, 420), code_height=200)
 def rawdata():
     return ql.sql("""
         SELECT
