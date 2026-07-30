@@ -125,9 +125,8 @@ def hochlauf():
     """)
 
 
-@canvas.notebook(position=(2340, -6273), size=(560, 420), code_height=200, viz={'outputCell': 3})
+@canvas.notebook(position=(2340, -6273), size=(560, 420), code_height=200, viz={'outputCell': 5, 'type': 'scatter', 'x': 'idx', 'y': ['good_neutral', 'bad']})
 def rotor_data_reader():
-    # %%
     df_optimierung = ql.sql("""
         SELECT
             rotorID,
@@ -226,8 +225,7 @@ def rotor_data_reader():
     # Step 3 (KB sec 2.7): first-run peak amplitude vs balancing outcome.
     # Only Lauf_Number == 1 rows are used - later runs would leak the label (business case
     # is predicting after the first spin).
-    import numpy as np
-    import plotly.express as px
+    import pandas as pd
 
     first_run = opt_dedup[opt_dedup["Lauf_Number"] == 1].copy()
 
@@ -241,34 +239,30 @@ def rotor_data_reader():
     ]
     first_run["peak_amplitude"] = first_run[amp_cols].max(axis=1)
     first_run["group"] = first_run["Lauf_Max"].ge(5).map(
-        {True: "bad (>=5 runs)", False: "good/neutral (<5 runs)"}
+        {True: "bad", False: "good_neutral"}
     )
 
-    # X-axis: the good/bad group, jittered so overlapping points fan out horizontally.
-    # This turns the scatter into a "dot/strip plot" - the vertical density of dots within
-    # each column is what lets you eyeball whether a group's amplitudes look roughly Gaussian
-    # (dense cluster near the mean, thinning at the tails), and whether the two group means
-    # are shifted apart (KB: bad rotors run ~1.6-1.9x higher first-run amplitude).
-    rng = np.random.default_rng(42)
-    group_x = first_run["group"].map({"good/neutral (<5 runs)": 0, "bad (>=5 runs)": 1})
-    first_run["x_jitter"] = group_x + rng.uniform(-0.15, 0.15, len(first_run))
+    # Native viz has no color/group field - pivot to wide format instead, one column
+    # per group ("good_neutral", "bad"), plotted against row index ("idx"). Each group
+    # renders as its own point cloud/dot plot - the vertical spread/density within a
+    # column is what reveals whether it looks roughly Gaussian, and how far the "bad"
+    # cloud sits above "good_neutral" (KB: bad rotors run ~1.6-1.9x higher first-run
+    # amplitude).
+    good_amp = (
+        first_run.loc[first_run["group"] == "good_neutral", "peak_amplitude"]
+        .reset_index(drop=True)
+        .rename("good_neutral")
+    )
+    bad_amp = (
+        first_run.loc[first_run["group"] == "bad", "peak_amplitude"]
+        .reset_index(drop=True)
+        .rename("bad")
+    )
 
-    fig = px.scatter(
-        first_run,
-        x="x_jitter",
-        y="peak_amplitude",
-        color="group",
-        opacity=0.6,
-        title="First-run peak amplitude by balancing outcome (jittered dot plot)",
-    )
-    fig.update_xaxes(
-        tickmode="array",
-        tickvals=[0, 1],
-        ticktext=["good/neutral", "bad"],
-        title="balancing outcome (jittered)",
-    )
-    fig.update_yaxes(title="peak first-run amplitude (µm)")
-    fig
+    dot_plot_df = pd.concat([good_amp, bad_amp], axis=1)
+    dot_plot_df["idx"] = dot_plot_df.index
+
+    dot_plot_df
 
 
 if __name__ == "__main__":
