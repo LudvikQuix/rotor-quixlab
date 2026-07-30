@@ -81,5 +81,10 @@ def kb_ballancing_machine_md():
     pass
 
 
+@canvas.file(position=(1821, -6037), size=(520, 460), code_height=0, path='kb/Pffeifer-KB.md')
+def kb_Pffeifer_KB_md():
+    pass
+
+
 if __name__ == "__main__":
     canvas.serve()
