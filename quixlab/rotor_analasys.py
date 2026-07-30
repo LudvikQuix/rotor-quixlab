@@ -125,7 +125,7 @@ def hochlauf():
     """)
 
 
-@canvas.notebook(position=(1092, -6582), size=(560, 420), code_height=200, viz={'outputCell': 0})
+@canvas.notebook(position=(2340, -6273), size=(560, 420), code_height=200, viz={'outputCell': 0})
 def rotor_data_reader():
     # %%
     # Data source 1: optimierung - per-run balancing log (rotor, Lauf)
