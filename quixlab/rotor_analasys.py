@@ -76,7 +76,7 @@ def optimierung():
     LIMIT 100""")
 
 
-@canvas.file(position=(-75, -6524), size=(520, 460), code_height=0, path='kb/ballancing-machine.md')
+@canvas.file(position=(-63, -6512), size=(520, 460), code_height=0, path='kb/ballancing-machine.md')
 def kb_ballancing_machine_md():
     pass
 
