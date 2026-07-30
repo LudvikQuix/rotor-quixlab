@@ -227,6 +227,7 @@ def rotor_data_reader():
     # Only Lauf_Number == 1 rows are used - later runs would leak the label (business case
     # is predicting after the first spin).
     import numpy as np
+    import plotly.express as px
 
     first_run = opt_dedup[opt_dedup["Lauf_Number"] == 1].copy()
 
