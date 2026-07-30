@@ -127,6 +127,7 @@ def hochlauf():
 
 @canvas.notebook(position=(2340, -6273), size=(560, 420), code_height=200, viz={'outputCell': 3})
 def rotor_data_reader():
+    # %%
     df_optimierung = ql.sql("""
         SELECT
             rotorID,
