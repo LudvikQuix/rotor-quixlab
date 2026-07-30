@@ -584,23 +584,33 @@ def ai_3():
     # ql-ai: generated from prompt 769920c330f0bc2c
     import pandas as pd
     import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
 
-    df = rawdata.sort_values("ts_ms").copy()
-    df["timestamp"] = pd.to_datetime(df["ts_ms"], unit="ms")
+    df = rawdata.copy()
 
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df["timestamp"], y=df["GS"], name="GS", yaxis="y1"))
-    fig.add_trace(go.Scatter(x=df["timestamp"], y=df["MS"], name="MS", yaxis="y2"))
-    fig.add_trace(go.Scatter(x=df["timestamp"], y=df["Hall"], name="Hall", yaxis="y2"))
+    # rawdata can contain multiple runs (distinguished by file_timestamp); keep the most
+    # recent run only so the time axis is a single continuous waveform.
+    latest_run = df["file_timestamp"].max()
+    df = df[df["file_timestamp"] == latest_run].sort_values("time_ms")
 
-    fig.update_layout(
-        height=400,
-        xaxis=dict(title="Time"),
-        yaxis=dict(title="GS"),
-        yaxis2=dict(title="MS / Hall", overlaying="y", side="right"),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(t=40, b=40),
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+    fig.add_trace(
+        go.Scattergl(x=df["time_ms"], y=df["GS"], name="GS", mode="lines"),
+        secondary_y=False,
     )
+    fig.add_trace(
+        go.Scattergl(x=df["time_ms"], y=df["MS"], name="MS", mode="lines"),
+        secondary_y=True,
+    )
+    fig.add_trace(
+        go.Scattergl(x=df["time_ms"], y=df["Hall"], name="Hall", mode="lines"),
+        secondary_y=True,
+    )
+
+    fig.update_layout(height=400, xaxis_title="time_ms", margin=dict(l=40, r=40, t=30, b=30))
+    fig.update_yaxes(title_text="GS", secondary_y=False)
+    fig.update_yaxes(title_text="MS / Hall", secondary_y=True)
 
     fig
 
