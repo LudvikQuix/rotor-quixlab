@@ -197,6 +197,8 @@ def rotor_data_reader():
         {"source": "rawdata", "rows": len(df_rawdata), "cols": df_rawdata.shape[1]},
     ])
     summary
+    # %%
+    summary
 
 
 if __name__ == "__main__":
