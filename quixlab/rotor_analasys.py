@@ -107,5 +107,23 @@ def rawdata():
     """)
 
 
+@canvas.dataset(position=(266, -6299), size=(560, 420), code_height=200)
+def hochlauf():
+    return ql.sql("""
+        SELECT
+            rotorID,
+            machineName,
+            fileName,
+            Speed_Hz,
+            AMS, WMS, AGS, WGS,
+            StatusID,
+            timestamp_ms
+        FROM hochlauf
+        WHERE machineName = 'DEAARDSK0175'
+        ORDER BY rotorID, timestamp_ms
+        LIMIT 2000
+    """)
+
+
 if __name__ == "__main__":
     canvas.serve()
