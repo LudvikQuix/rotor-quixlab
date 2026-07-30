@@ -128,6 +128,7 @@ def hochlauf():
 @canvas.notebook(position=(2340, -6273), size=(560, 420), code_height=200, viz={'outputCell': 3})
 def rotor_data_reader():
     # %%
+    # Data source 1: optimierung - per-run balancing log (rotor, Lauf)
     df_optimierung = ql.sql("""
         SELECT
             rotorID,
@@ -188,6 +189,8 @@ def rotor_data_reader():
 
     # %%
     # Summary of what was loaded - this is the designated output cell
+    import pandas as pd
+
     summary = pd.DataFrame([
         {"source": "optimierung", "rows": len(df_optimierung), "cols": df_optimierung.shape[1]},
         {"source": "hochlauf", "rows": len(df_hochlauf), "cols": df_hochlauf.shape[1]},
