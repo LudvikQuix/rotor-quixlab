@@ -64,12 +64,12 @@ def ai_1():
     summary
 
 
-@canvas.dataset(position=(1089, -5928), size=(816, 850), code_height=200)
+@canvas.dataset(position=(1111, -5951), size=(651, 607), code_height=200)
 def lake_inventory():
     return ql.sql("""SHOW TABLES""")
 
 
-@canvas.dataset(position=(14, -5914), size=(1028, 748), code_height=200)
+@canvas.dataset(position=(243, -5923), size=(748, 567), code_height=200)
 def optimierung():
     return ql.sql("""SELECT *
     FROM rawdata
@@ -125,7 +125,7 @@ def hochlauf():
     """)
 
 
-@canvas.notebook(position=(3006, -5300), size=(560, 420), code_height=200, viz={'cells': {'3': {'type': 'table', 'x': 'source', 'y': 'rows'}, '4': {'type': 'table', 'x': 'source', 'y': 'rows'}, '5': {'type': 'bar', 'x': 'amplitude_range', 'y': 'good_neutral_shaft_count'}}, 'outputCells': [3, 4], 'type': 'scatter', 'x': 'idx', 'y': ['good_neutral', 'bad']})
+@canvas.notebook(position=(1821, -6873), size=(1461, 1544), code_height=200, viz={'cells': {'3': {'type': 'table', 'x': 'source', 'y': 'rows'}, '4': {'type': 'table', 'x': 'source', 'y': 'rows'}, '5': {'type': 'bar', 'x': 'amplitude_range', 'y': 'good_neutral_shaft_count'}}, 'outputCells': [3, 4], 'type': 'scatter', 'x': 'idx', 'y': ['good_neutral', 'bad']})
 def rotor_data_reader():
     # %%
     df_optimierung = ql.sql("""
