@@ -128,7 +128,6 @@ def hochlauf():
 @canvas.notebook(position=(2340, -6273), size=(560, 420), code_height=200, viz={'outputCell': 3})
 def rotor_data_reader():
     # %%
-    # Data source 1: optimierung - per-run balancing log (rotor, Lauf)
     df_optimierung = ql.sql("""
         SELECT
             rotorID,
@@ -188,7 +187,7 @@ def rotor_data_reader():
     """)
 
     # %%
-    # Summary of what was loaded - this is the designated output cell
+    # Summary of what was loaded
     import pandas as pd
 
     summary = pd.DataFrame([
@@ -197,8 +196,31 @@ def rotor_data_reader():
         {"source": "rawdata", "rows": len(df_rawdata), "cols": df_rawdata.shape[1]},
     ])
     summary
+
     # %%
-    summary
+    # Step 2 (domain workflow, Pffeifer-KB.md sec 2.4/2.9): rebuild the target from optimierung.
+    # Lauf_Max/Lauf_Number are derived, not stored - dedupe timestamp noise per id_cols first,
+    # since ~97% of optimierung.timestamp is batch-ingestion artifact, not real spacing.
+    id_cols = ["rotorID", "fileName", "machineName", "Hersteller"]
+
+    opt_dedup = (
+        df_optimierung
+        .sort_values(id_cols + ["Lauf"])
+        .drop_duplicates(subset=id_cols + ["Lauf"], keep="first")
+    )
+
+    opt_dedup["Lauf_Number"] = opt_dedup.groupby(id_cols).cumcount() + 1
+    opt_dedup["Lauf_Max"] = opt_dedup.groupby(id_cols)["Lauf_Number"].transform("max")
+    opt_dedup["Lauf_Binary"] = opt_dedup["Lauf_Max"] >= 5          # classification target (~31% prevalence expected)
+    opt_dedup["Lauf_Left"] = opt_dedup["Lauf_Max"] - opt_dedup["Lauf_Number"]  # regression target: runs remaining
+
+    lauf_max_per_rotor = (
+        opt_dedup
+        .drop_duplicates(subset=id_cols)[id_cols + ["Lauf_Max", "Lauf_Binary"]]
+        .reset_index(drop=True)
+    )
+
+    lauf_max_per_rotor
 
 
 if __name__ == "__main__":
