@@ -223,7 +223,7 @@ def rotor_data_reader():
     lauf_max_per_rotor
 
     # %%
-    # Step 3 (KB sec 2.7): first-run peak amplitude vs balancing outcome, as a histogram.
+    # Step 3 (KB sec 2.7): first-run peak amplitude vs balancing outcome.
     # Only Lauf_Number == 1 rows are used - later runs would leak the label (business case
     # is predicting after the first spin).
     import pandas as pd
@@ -243,36 +243,27 @@ def rotor_data_reader():
         {True: "bad", False: "good_neutral"}
     )
 
-    # Bin first-run peak amplitude into equal-width intervals and count distinct
-    # shafts (rotors) per interval, per outcome group. Native viz has no
-    # color/group field, so groups become separate wide columns; each column's
-    # value is the shaft count for that amplitude interval - this is the
-    # histogram equivalent of the earlier dot plot (KB: bad rotors run ~1.6-1.9x
-    # higher first-run amplitude, so the "bad" bars should skew toward higher
-    # intervals).
-    n_bins = 15
-    first_run["amplitude_bin"] = pd.cut(first_run["peak_amplitude"], bins=n_bins)
-
-    hist_df = (
-        first_run
-        .groupby(["amplitude_bin", "group"], observed=True)["rotorID"]
-        .nunique()
-        .unstack("group")
-        .reindex(columns=["good_neutral", "bad"])
-        .fillna(0)
-        .astype(int)
-        .sort_index()
+    # Native viz has no color/group field - pivot to wide format instead, one column
+    # per group ("good_neutral", "bad"), plotted against row index ("idx"). Each group
+    # renders as its own point cloud/dot plot - the vertical spread/density within a
+    # column is what reveals whether it looks roughly Gaussian, and how far the "bad"
+    # cloud sits above "good_neutral" (KB: bad rotors run ~1.6-1.9x higher first-run
+    # amplitude).
+    good_amp = (
+        first_run.loc[first_run["group"] == "good_neutral", "peak_amplitude"]
+        .reset_index(drop=True)
+        .rename("good_neutral")
+    )
+    bad_amp = (
+        first_run.loc[first_run["group"] == "bad", "peak_amplitude"]
+        .reset_index(drop=True)
+        .rename("bad")
     )
 
-    hist_df = hist_df.rename(columns={
-        "good_neutral": "good_neutral_shaft_count",
-        "bad": "bad_shaft_count",
-    })
+    dot_plot_df = pd.concat([good_amp, bad_amp], axis=1)
+    dot_plot_df["idx"] = dot_plot_df.index
 
-    hist_df["amplitude_range"] = hist_df.index.map(lambda iv: f"{iv.left:.1f}-{iv.right:.1f}")
-    hist_df = hist_df.reset_index(drop=True)
-
-    hist_df
+    dot_plot_df
 
 
 if __name__ == "__main__":
