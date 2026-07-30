@@ -81,7 +81,7 @@ def kb_ballancing_machine_md():
     pass
 
 
-@canvas.file(position=(532, -6506), size=(520, 460), code_height=0, path='kb/Pffeifer-KB.md')
+@canvas.file(position=(650, -6863), size=(520, 460), code_height=0, path='kb/Pffeifer-KB.md')
 def kb_Pffeifer_KB_md():
     pass
 
@@ -107,7 +107,7 @@ def rawdata():
     """)
 
 
-@canvas.dataset(position=(266, -6299), size=(560, 420), code_height=200)
+@canvas.dataset(position=(1221, -6863), size=(560, 420), code_height=200)
 def hochlauf():
     return ql.sql("""
         SELECT
