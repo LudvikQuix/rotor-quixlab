@@ -125,5 +125,77 @@ def hochlauf():
     """)
 
 
+@canvas.notebook(position=(1091, -6220), size=(560, 420), code_height=200, viz={'outputCell': 3})
+def rotor_data_reader():
+    # %%
+    # Data source 1: optimierung - per-run balancing log (rotor, Lauf)
+    df_optimierung = ql.sql("""
+        SELECT
+            rotorID,
+            Lauf,
+            fileName,
+            machineName,
+            Hersteller,
+            AMS600, WMS600, AGS600, WGS600,
+            AMS2200, WMS2200, AGS2200, WGS2200,
+            AMS3200, WMS3200, AGS3200, WGS3200,
+            AMS5400, WMS5400, AGS5400, WGS5400,
+            AMS10000, WMS10000, AGS10000, WGS10000,
+            AMS49200, WMS49200, AGS49200, WGS49200,
+            UNWUCHTE1, UWINKELE1,
+            UNWUCHTE2, UWINKELE2,
+            UNWUCHTE3, UWINKELE3
+        FROM optimierung
+        ORDER BY rotorID, Lauf
+        LIMIT 1000
+    """)
+
+    # %%
+    # Data source 2: hochlauf - ~1Hz ramp-up Bode curves
+    df_hochlauf = ql.sql("""
+        SELECT
+            rotorID,
+            machineName,
+            fileName,
+            Speed_Hz,
+            AMS, WMS, AGS, WGS,
+            StatusID,
+            timestamp_ms
+        FROM hochlauf
+        WHERE machineName = 'DEAARDSK0175'
+        ORDER BY rotorID, timestamp_ms
+        LIMIT 2000
+    """)
+
+    # %%
+    # Data source 3: rawdata - 100kHz coast-down waveforms (always filter all partitions - table is ~492GB)
+    df_rawdata = ql.sql("""
+        SELECT
+            rotorID,
+            machineName,
+            fileName,
+            run_id,
+            time_ms,
+            GS, MS, Hall
+        FROM rawdata
+        WHERE machineName = 'DEAARDSK0175'
+          AND rotorID = 'DE20254901019'
+          AND year = 2026
+          AND month = '02'
+          AND day = 13
+        ORDER BY time_ms
+        LIMIT 5000
+    """)
+
+    # %%
+    # Summary of what was loaded - this is the designated output cell
+    summary = pd.DataFrame([
+        {"source": "optimierung", "rows": len(df_optimierung), "cols": df_optimierung.shape[1]},
+        {"source": "hochlauf", "rows": len(df_hochlauf), "cols": df_hochlauf.shape[1]},
+        {"source": "rawdata", "rows": len(df_rawdata), "cols": df_rawdata.shape[1]},
+    ])
+    summary
+
+
 if __name__ == "__main__":
     canvas.serve()
