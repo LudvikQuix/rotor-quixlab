@@ -64,7 +64,7 @@ def ai_1():
     summary
 
 
-@canvas.dataset(position=(1295, -6016), size=(816, 850), code_height=200)
+@canvas.dataset(position=(1406, -6070), size=(816, 850), code_height=200)
 def lake_inventory():
     return ql.sql("""SHOW TABLES""")
 
