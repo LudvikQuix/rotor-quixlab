@@ -125,7 +125,7 @@ def hochlauf():
     """)
 
 
-@canvas.notebook(position=(3006, -5300), size=(560, 420), code_height=200, viz={'cells': {'3': {'type': 'table', 'x': 'source', 'y': 'rows'}, '4': {'type': 'table', 'x': 'source', 'y': 'rows'}, '5': {'type': 'bar', 'x': 'amplitude_range', 'y': ['good_neutral_shaft_count', 'bad_shaft_count']}}, 'outputCells': [3, 4], 'type': 'scatter', 'x': 'idx', 'y': ['good_neutral', 'bad']})
+@canvas.notebook(position=(3006, -5300), size=(560, 420), code_height=200, viz={'cells': {'3': {'type': 'table', 'x': 'source', 'y': 'rows'}, '4': {'type': 'table', 'x': 'source', 'y': 'rows'}, '5': {'type': 'bar', 'x': 'bad_shaft_count', 'y': ['good_neutral_shaft_count', 'bad_shaft_count']}}, 'outputCells': [3, 4], 'type': 'scatter', 'x': 'idx', 'y': ['good_neutral', 'bad']})
 def rotor_data_reader():
     # %%
     df_optimierung = ql.sql("""
