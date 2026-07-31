@@ -275,8 +275,6 @@ def rotor_data_reader():
     hist_df
     # %%
 
-    # %% [markdown]
-
 
 if __name__ == "__main__":
     canvas.serve()
