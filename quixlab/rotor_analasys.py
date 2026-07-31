@@ -273,7 +273,6 @@ def rotor_data_reader():
     hist_df = hist_df.reset_index(drop=True)
 
     hist_df
-    # %%
 
 
 if __name__ == "__main__":
