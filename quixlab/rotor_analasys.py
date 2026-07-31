@@ -125,7 +125,7 @@ def hochlauf():
     """)
 
 
-@canvas.notebook(position=(1704, -6724), size=(1461, 1544), code_height=200, viz={'cells': {'3': {'type': 'table', 'x': 'source', 'y': 'rows'}, '4': {'type': 'table', 'x': 'source', 'y': 'rows'}, '5': {'type': 'bar', 'x': 'amplitude_range', 'y': 'good_neutral_shaft_count'}, '6': {'codeHidden': [5], 'type': 'line', 'x': 'amplitude_range', 'y': 'bad_shaft_count'}}, 'hideCode': True, 'outputCells': [3, 4], 'type': 'scatter', 'x': 'idx', 'y': ['good_neutral', 'bad']})
+@canvas.notebook(position=(1704, -6724), size=(1461, 1544), code_height=200, viz={'cells': {'3': {'type': 'table', 'x': 'source', 'y': 'rows'}, '4': {'type': 'table', 'x': 'source', 'y': 'rows'}, '5': {'type': 'bar', 'x': 'amplitude_range', 'y': 'good_neutral_shaft_count'}, '6': {'codeHidden': [5], 'type': 'line', 'x': 'amplitude_range', 'y': []}}, 'hideCode': True, 'outputCells': [3, 4], 'type': 'scatter', 'x': 'idx', 'y': ['good_neutral', 'bad']})
 def rotor_data_reader():
     # %%
     df_optimierung = ql.sql("""
@@ -273,6 +273,88 @@ def rotor_data_reader():
     hist_df = hist_df.reset_index(drop=True)
 
     hist_df
+    # %%
+    # ql-ai-prompt: create a histogram based on speed amplitude in rages on x axe with count on y axis and make columns ranges color coded if this means good shaft neutral or bad
+    import pandas as pd
+
+    # Self-contained: reload first-run optimierung rows rather than assuming the
+    # upstream cell's locals are in scope (only its returned hist_df would be,
+    # and that cell already collapsed good+neutral into one series).
+    raw = ql.sql("""
+        SELECT
+            rotorID, fileName, machineName, Hersteller, Lauf,
+            AMS600, AGS600,
+            AMS2200, AGS2200,
+            AMS3200, AGS3200,
+            AMS5400, AGS5400,
+            AMS10000, AGS10000,
+            AMS49200, AGS49200
+        FROM optimierung
+    """)
+
+    # Derive Lauf_Number / Lauf_Max per rotor (KB sec 2.6) - Lauf_Max is not a
+    # stored column, must be recomputed from the run sequence.
+    id_cols = ["rotorID", "fileName", "machineName", "Hersteller"]
+    raw = raw.sort_values(id_cols + ["Lauf"])
+    raw["Lauf_Number"] = raw.groupby(id_cols).cumcount() + 1
+    raw["Lauf_Max"] = raw.groupby(id_cols)["Lauf_Number"].transform("max")
+
+    # Only first-run data as predictor (business case: predict after first spin;
+    # later runs would leak the label).
+    first_run = raw[raw["Lauf_Number"] == 1].copy()
+
+    amp_cols = [
+        "AMS600", "AGS600",
+        "AMS2200", "AGS2200",
+        "AMS3200", "AGS3200",
+        "AMS5400", "AGS5400",
+        "AMS10000", "AGS10000",
+        "AMS49200", "AGS49200",
+    ]
+    first_run["peak_amplitude"] = first_run[amp_cols].max(axis=1)
+
+    # Three-way outcome per KB sec 2.6: good (<=3 runs), neutral (==4, excluded
+    # from the good/bad classifier but shown here for context), bad (>=5 runs).
+    def classify(lauf_max):
+        if lauf_max <= 3:
+            return "good"
+        elif lauf_max == 4:
+            return "neutral"
+        return "bad"
+
+    first_run["outcome"] = first_run["Lauf_Max"].apply(classify)
+
+    # Bin first-run peak amplitude into equal-width ranges for the histogram x-axis.
+    n_bins = 15
+    first_run["amplitude_bin"] = pd.cut(first_run["peak_amplitude"], bins=n_bins)
+
+    hist_df = (
+        first_run
+        .groupby(["amplitude_bin", "outcome"], observed=True)["rotorID"]
+        .nunique()
+        .unstack("outcome")
+        .reindex(columns=["good", "neutral", "bad"])
+        .fillna(0)
+        .astype(int)
+        .sort_index()
+    )
+
+    hist_df["amplitude_range"] = hist_df.index.map(lambda iv: f"{iv.left:.1f}-{iv.right:.1f}")
+    hist_df = hist_df.reset_index(drop=True)
+    hist_df = hist_df.rename(columns={
+        "good": "good_shaft_count",
+        "neutral": "neutral_shaft_count",
+        "bad": "bad_shaft_count",
+    })
+
+    # Wide format (one column per outcome) so native viz renders each outcome as
+    # its own colored series/column within each amplitude-range bar group.
+    ql.viz(
+        hist_df,
+        type="bar",
+        x="amplitude_range",
+        y=["good_shaft_count", "neutral_shaft_count", "bad_shaft_count"],
+    )
 
 
 if __name__ == "__main__":
