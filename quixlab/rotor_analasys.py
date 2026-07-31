@@ -107,7 +107,7 @@ def rawdata():
     """)
 
 
-@canvas.dataset(position=(1221, -6863), size=(560, 420), code_height=200)
+@canvas.dataset(position=(1221, -6863), size=(560, 420), code_height=188)
 def hochlauf():
     return ql.sql("""
         SELECT
