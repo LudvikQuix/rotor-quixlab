@@ -81,7 +81,7 @@ def kb_ballancing_machine_md():
     pass
 
 
-@canvas.file(position=(658, -6924), size=(525, 412), code_height=0, path='kb/Pffeifer-KB.md')
+@canvas.file(position=(661, -6877), size=(525, 412), code_height=0, path='kb/Pffeifer-KB.md')
 def kb_Pffeifer_KB_md():
     pass
 
@@ -125,7 +125,7 @@ def hochlauf():
     """)
 
 
-@canvas.notebook(position=(1705, -6725), size=(1461, 1544), code_height=200, viz={'cells': {'3': {'type': 'table', 'x': 'source', 'y': 'rows'}, '4': {'type': 'heatmap', 'x': 'rotorID', 'y': 'Lauf_Max'}, '5': {'type': 'table', 'x': 'good_neutral_shaft_count', 'y': 'bad_shaft_count'}, '6': {'codeHidden': [5], 'type': 'table', 'x': 'amplitude_range', 'y': ['good_shaft_count', 'neutral_shaft_count', 'bad_shaft_count']}}, 'hideCode': True, 'outputCells': [4, 5, 6], 'type': 'scatter', 'x': 'idx', 'y': ['good_neutral', 'bad']})
+@canvas.notebook(position=(1854, -6854), size=(1461, 1544), code_height=200, viz={'cells': {'3': {'type': 'table', 'x': 'source', 'y': 'rows'}, '4': {'type': 'heatmap', 'x': 'rotorID', 'y': 'Lauf_Max'}, '5': {'type': 'table', 'x': 'good_neutral_shaft_count', 'y': 'bad_shaft_count'}, '6': {'codeHidden': [5], 'type': 'table', 'x': 'amplitude_range', 'y': ['good_shaft_count', 'neutral_shaft_count', 'bad_shaft_count']}}, 'hideCode': True, 'outputCells': [4, 5, 6], 'type': 'scatter', 'x': 'idx', 'y': ['good_neutral', 'bad']})
 def rotor_data_reader():
     # %%
     df_optimierung = ql.sql("""
